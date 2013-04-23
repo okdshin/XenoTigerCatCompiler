@@ -14,6 +14,11 @@ public:
 	String(){}
 	String(const Char& c){ char_vect.push_back(c); }
 	String(const CharVect& char_vect) : char_vect(char_vect){}
+	String(const std::string& std_str){
+		for(const auto c : std_str){
+			char_vect.push_back(Char(c));	
+		}	
+	}
 
 	auto At(unsigned int index) -> Char {
 		return char_vect.at(index);
@@ -44,9 +49,7 @@ auto operator>>(std::istream& is, String& str) -> std::istream& {
 	assert(str.char_vect.empty());
 	std::basic_string<Char::RawChar> std_str;
 	is >> std_str;
-	for(const auto c : std_str){
-		str.char_vect.push_back(Char(c));	
-	}
+	str = String(std_str);
 	return is;
 }
 auto operator<<(std::ostream& os, const String& str) -> std::ostream& {

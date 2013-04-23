@@ -8,6 +8,7 @@ class Char{
 public:
 	using RawChar = char;
 
+	Char(){}
 	explicit Char(RawChar raw_char) : raw_char(raw_char){}
 	
 	auto operator==(const Char& c)const -> bool {

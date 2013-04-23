@@ -8,14 +8,16 @@ namespace ticket
 
 class Compiler{
 public:
-    Compiler():current_char_index(0){}
-    ~Compiler(){}
+    Compiler():current_char_index(0), c(){}
 
 	auto StartMainLoop() -> void {
 		while(true){
 			line.Clear();
-			std::cin >> line;
 			current_char_index = 0;
+			std::string std_str;
+			std::getline(std::cin, std_str);
+			line = String(std_str);
+			c = GetNextChar();
 			while(true){
 				const auto token = GetNextToken();
 				if(token->GetKind() == Kind::EofToken()){
@@ -25,8 +27,18 @@ public:
 		}
 	}
 
+	auto GetNextChar() -> Char {
+		if(current_char_index >= line.Size()){
+			std::cout << "NextChar:Eof" << std::endl;
+			return Char::EofChar();	
+		}
+		const auto next_char = line.At(current_char_index);
+		++current_char_index;
+		std::cout << "NextChar:\'" << next_char << "\'" << std::endl;
+		return next_char;	
+	}
+
 	auto GetNextToken() -> Token::Ptr {	
-		Char c = GetNextChar();
 		Token::Ptr token;
 		while(true){
 			if(!c.IsSpace()){
@@ -102,20 +114,10 @@ public:
 		return token;	
 	}
 
-	auto GetNextChar() -> Char {
-		if(current_char_index >= line.Size()){
-			std::cout << "NextChar:\'" << "\0" << "\'" << std::endl;
-			return Char::EofChar();	
-		}
-		const auto next_char = line.At(current_char_index);
-		++current_char_index;
-		std::cout << "NextChar:\'" << next_char << "\'" << std::endl;
-		return next_char;	
-	}
-
 private:
 	unsigned int current_char_index;
 	String line;
+	Char c;
 };
 }
 

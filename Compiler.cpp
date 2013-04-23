@@ -6,9 +6,9 @@ using namespace ticket;
 
 int main(int argc, char* argv[])
 {
-	Compiler calculator;
+	Compiler compiler;
 	try{
-		calculator.StartMainLoop();
+		compiler.StartMainLoop();
 	}catch(const std::exception& e){
 		std::cout << e.what() << std::endl;
 	}
