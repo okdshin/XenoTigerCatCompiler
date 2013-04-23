@@ -17,14 +17,10 @@ public:
 		return c.raw_char == raw_char;
 	}
 
-	static auto NewLineChar() -> Char {
-		return Char(RawChar('\n'));	
+	static auto EofChar() -> Char {
+		return Char(RawChar('\0'));	
 	}
 
-	auto IsNewLineChar()const -> bool {
-		return *this == NewLineChar();	
-	}
-	
 	auto IsSpace()const -> bool {
 		return raw_char == RawChar(' ') || raw_char == RawChar('\t');
 	}
@@ -43,7 +39,49 @@ public:
 	}
 
 	auto IsAlpha()const -> bool {
-		return !IsNewLineChar() && !IsDigit() && !IsSpace();
+		return 
+			!IsSpace() &&
+			!IsDigit() && 
+			!IsLeftParen() &&
+			!IsRightParen() &&
+			!IsPlus() &&
+			!IsMinus() &&
+			!IsMulti() &&
+			!IsDivi() &&
+			!IsAssign() &&
+			!IsEof();
+	}
+
+	auto IsLeftParen()const -> bool {
+		return raw_char == RawChar('(');	
+	}
+	
+	auto IsRightParen()const -> bool {
+		return raw_char == RawChar(')');	
+	}
+	
+	auto IsPlus()const -> bool {
+		return raw_char == RawChar('+');	
+	}
+	
+	auto IsMinus()const -> bool {
+		return raw_char == RawChar('-');	
+	}
+	
+	auto IsMulti()const -> bool {
+		return raw_char == RawChar('*');	
+	}
+	
+	auto IsDivi()const -> bool {
+		return raw_char == RawChar('/');	
+	}
+	
+	auto IsAssign()const -> bool {
+		return raw_char == RawChar('=');	
+	}
+	
+	auto IsEof()const -> bool {
+		return *this == EofChar();	
 	}
 
 	friend auto operator>>(std::istream& is, Char& c) -> std::istream&;
@@ -66,6 +104,9 @@ public:
 	using CharVect = std::vector<Char>;
 
 	String(){}
+	String(const Char& c){
+		char_vect.push_back(c);	
+	}
 	String(const CharVect& char_vect) : char_vect(char_vect){}
 
 	auto At(unsigned int index) -> Char {
@@ -112,10 +153,6 @@ auto operator<<(std::ostream& os, const String& str) -> std::ostream& {
 
 class Kind{
 public:
-	static auto EofToken() -> Kind {
-		return Kind(kEofToken);	
-	}
-
 	static auto IntNumberToken() -> Kind {
 		return Kind(kIntNumberToken);	
 	}
@@ -124,13 +161,50 @@ public:
 		return Kind(kVarNameToken);	
 	}
 
+	static auto LeftParenToken() -> Kind {
+		return Kind(kLeftParenToken);	
+	}
+	
+	static auto RightParenToken() -> Kind {
+		return Kind(kRightParenToken);	
+	}
+
+	static auto PlusToken() -> Kind {
+		return Kind(kPlusToken);	
+	}
+
+	static auto MinusToken() -> Kind {
+		return Kind(kMinusToken);	
+	}
+
+	static auto MultiToken() -> Kind {
+		return Kind(kMultiToken);	
+	}
+
+	static auto DiviToken() -> Kind {
+		return Kind(kDiviToken);	
+	}
+
+	static auto AssignToken() -> Kind {
+		return Kind(kAssignToken);	
+	}
+	
+	static auto EofToken() -> Kind {
+		return Kind(kEofToken);	
+	}
+
 	bool operator==(const Kind& pair){
 		return this->kind_enum == pair.kind_enum;
 	}
 
 	friend auto operator<<(std::ostream& os, const Kind& kind) -> std::ostream&;
 private:
-	enum KindEnum {kEofToken, kIntNumberToken, kVarNameToken};
+	enum KindEnum {
+		kIntNumberToken, kVarNameToken, 
+		kLeftParenToken, kRightParenToken,
+		kPlusToken, kMinusToken, kMultiToken, kDiviToken,
+		kAssignToken, kEofToken
+	};
 	Kind(KindEnum kind_enum) : kind_enum(kind_enum){}
 	KindEnum kind_enum;
 };
@@ -211,7 +285,7 @@ public:
 					break;
 				}
 				value.Append(c);
-				std::cout << "is digit" << std::endl;
+				std::cout << "\tis digit" << std::endl;
 				c = GetNextChar();
 			}
 		}
@@ -223,12 +297,49 @@ public:
 					break;
 				}
 				value.Append(c);
-				std::cout << "is alpha" << std::endl;
+				std::cout << "\tis alpha" << std::endl;
 				c = GetNextChar();
 			}
 		}
-		else {
+		else if(c.IsLeftParen()){
+			token = Token::Create(Kind::LeftParenToken());	
+			std::cout << "\tis left paren" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsRightParen()){
+			token = Token::Create(Kind::RightParenToken());	
+			std::cout << "\tis right paren" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsPlus()){
+			token = Token::Create(Kind::PlusToken());	
+			std::cout << "\tis plus" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsMinus()){
+			token = Token::Create(Kind::MinusToken());	
+			std::cout << "\tis minus" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsMulti()){
+			token = Token::Create(Kind::MultiToken());	
+			std::cout << "\tis multi" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsDivi()){
+			token = Token::Create(Kind::DiviToken());	
+			std::cout << "\tis divi" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsAssign()){
+			token = Token::Create(Kind::AssignToken());	
+			std::cout << "\tis assign" << std::endl;
+			c = GetNextChar();	
+		}
+		else if(c.IsEof()){
 			token = Token::Create(Kind::EofToken());	
+			std::cout << "\tis eof" << std::endl;
+			c = GetNextChar();		
 		}
 		std::cout << "NextToken:" << *token << std::endl;
 		return token;	
@@ -236,7 +347,7 @@ public:
 
 	auto GetNextChar() -> Char {
 		if(current_char_index >= line.Size()){
-			return Char::NewLineChar();	
+			return Char::EofChar();	
 		}
 		const auto next_char = line.At(current_char_index);
 		++current_char_index;
@@ -247,8 +358,6 @@ public:
 private:
 	unsigned int current_char_index;
 	String line;
-	
-
 };
 }
 
