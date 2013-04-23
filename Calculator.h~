@@ -1,0 +1,57 @@
+#pragma once
+//Calculator:20130416
+#include <iostream>
+#include <string>
+
+namespace none
+{
+
+class Kind{
+public:
+	static auto EofToken() -> Kind {
+		return Kind(kEofToken);	
+	}
+	bool operator==(const Kind& pair){
+		return this->kind_enum == pair.kind_enum;
+	}
+private:
+	enum KindEnum {kEofToken};
+	Kind(KindEnum kind_enum) : kind_enum(kind_enum){}
+	KindEnum kind_enum;
+};
+
+class Token{
+public:
+	Token(const Kind& kind) : kind(kind){}
+
+	auto GetKind()const -> Kind {
+		return this->kind;
+	}
+private:
+	Kind kind;
+};
+
+class Calculator{
+public:
+    Calculator(){}
+    ~Calculator(){}
+
+	auto StartMainLoop() -> void {
+		while(true){
+			std::string input_str; 
+			std::cin >> input_str;
+			const auto token = GetNextToken();
+			if(token.GetKind() == Kind::EofToken()){
+				return;	
+			}
+		}
+	}
+
+	auto GetNextToken() -> Token {
+		return Token(Kind::EofToken());	
+	}
+private:
+
+};
+}
+
