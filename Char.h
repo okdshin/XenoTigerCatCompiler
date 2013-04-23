@@ -15,7 +15,7 @@ public:
 		return c.raw_char == raw_char;
 	}
 
-	static auto EofChar() -> Char {
+	static auto EolChar() -> Char {
 		return Char(RawChar('\0'));	
 	}
 
@@ -26,7 +26,7 @@ public:
 	auto IsMulti()const -> bool { return raw_char == RawChar('*'); }
 	auto IsDivi()const -> bool { return raw_char == RawChar('/'); }
 	auto IsAssign()const -> bool { return raw_char == RawChar('='); }
-	auto IsEof()const -> bool { return *this == EofChar(); }
+	auto IsEol()const -> bool { return *this == EolChar(); }
 
 	auto IsSpace()const -> bool {
 		return raw_char == RawChar(' ') || raw_char == RawChar('\t');
@@ -46,7 +46,7 @@ public:
 			!IsSpace() && !IsDigit() && 
 			!IsLeftParen() && !IsRightParen() &&
 			!IsPlus() && !IsMinus() && !IsMulti() && !IsDivi() &&
-			!IsAssign() && !IsEof();
+			!IsAssign() && !IsEol();
 	}
 
 	friend auto operator>>(std::istream& is, Char& c) -> std::istream&;

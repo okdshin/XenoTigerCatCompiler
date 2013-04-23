@@ -15,7 +15,7 @@ public:
 	static auto MultiToken() -> Kind 		{ return Kind("MultiToken"); }
 	static auto DiviToken() -> Kind 		{ return Kind("DiviToken");	}
 	static auto AssignToken() -> Kind 		{ return Kind("AssignToken");	}
-	static auto EofToken() -> Kind 			{ return Kind("EofToken"); }
+	static auto EolToken() -> Kind 			{ return Kind("EolToken"); }
 
 	bool operator==(const Kind& pair){ return this->kind_str == pair.kind_str; }
 
