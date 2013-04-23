@@ -20,6 +20,12 @@ public:
 		}	
 	}
 
+	static auto GetLine(std::istream& is) -> String {
+		std::string std_str;
+		std::getline(is, std_str);
+		return String(std_str);
+	}
+
 	auto At(unsigned int index) -> Char {
 		return char_vect.at(index);
 	}
@@ -27,10 +33,6 @@ public:
 	auto Append(const Char& c) -> void {
 		char_vect.push_back(c);
 	} 
-
-	auto Clear() -> void {
-		char_vect.clear();	
-	}
 
 	auto IsEmpty() -> bool {
 		return char_vect.size() == 0;	
@@ -59,5 +61,6 @@ auto operator<<(std::ostream& os, const String& str) -> std::ostream& {
 	}
 	return os;
 }
+	
 }
 

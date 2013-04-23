@@ -12,11 +12,8 @@ public:
 
 	auto StartMainLoop() -> void {
 		while(true){
-			line.Clear();
 			current_char_index = 0;
-			std::string std_str;
-			std::getline(std::cin, std_str);
-			line = String(std_str);
+			line = String::GetLine(std::cin);
 			c = GetNextChar();
 			while(true){
 				const auto token = GetNextToken();
