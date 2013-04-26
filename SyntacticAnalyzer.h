@@ -3,7 +3,7 @@
 #include <iostream>
 #include "LexicalAnalyzer.h"
 
-namespace ticket
+namespace tiger_cat
 {
 
 class SyntacticAnalyzer{

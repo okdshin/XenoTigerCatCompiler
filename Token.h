@@ -4,7 +4,7 @@
 #include "String.h"
 #include "Kind.h"
 #include "SharedPtr.h"
-namespace ticket
+namespace tiger_cat
 {
 class Token{
 public:

@@ -4,7 +4,7 @@
 #include "SharedPtr.h"
 #include "String.h"
 
-namespace ticket
+namespace tiger_cat
 {
 class Symbol {
 public:

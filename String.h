@@ -5,7 +5,7 @@
 #include <vector>
 #include "Char.h"
 
-namespace ticket
+namespace tiger_cat
 {
 class String{
 public:

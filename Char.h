@@ -2,7 +2,7 @@
 //Char:20130424
 #include <iostream>
 
-namespace ticket
+namespace tiger_cat
 {
 class Char{
 public:

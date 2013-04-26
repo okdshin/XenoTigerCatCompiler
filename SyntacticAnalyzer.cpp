@@ -2,7 +2,7 @@
 #include "SyntacticAnalyzer.h"
 #include <iostream>
 
-using namespace ticket;
+using namespace tiger_cat;
 
 int main(int argc, char* argv[])
 {

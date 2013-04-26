@@ -2,7 +2,7 @@
 //Kind:20130424
 #include <iostream>
 
-namespace ticket
+namespace tiger_cat
 {
 class Kind{
 public:

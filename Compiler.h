@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Token.h"
 
-namespace ticket
+namespace tiger_cat
 {
 
 class Compiler{
