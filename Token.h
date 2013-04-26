@@ -9,7 +9,8 @@ namespace ticket
 class Token{
 public:
 	using Ptr = SharedPtr<Token>;
-	static auto Create(const Kind& kind, const String& value=String()) -> Ptr {
+	using Value = String;
+	static auto Create(const Kind& kind, const String& value=Value()) -> Ptr {
 		return Ptr(new Token(kind, value));	
 	}
 
@@ -17,15 +18,16 @@ public:
 		return this->kind;
 	}
 
-	auto GetValue()const -> String {
+	auto GetValue()const -> Value {
 		return value;
 	}
 	
 private:
-	Token(const Kind& kind, const String& value=String()) : kind(kind), value(value){}
+	Token(const Kind& kind, const Value& value=String()) 
+		: kind(kind), value(value){}
 	
 	Kind kind;
-	String value;
+	Value value;
 };
 auto operator<<(std::ostream& os, const Token& token) -> std::ostream& {
 	os << "Token:" << token.GetKind() << ", " << token.GetValue();
