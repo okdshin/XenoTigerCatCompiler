@@ -3,68 +3,70 @@
 #include <iostream>
 #include "SharedPtr.h"
 #include "String.h"
+#include "Symbol.h"
+#include "HashMap.h"
 
 namespace tiger_cat
 {
-class Symbol {
+class SymbolTable {
 public:
-	using Ptr = SharedPtr<Symbol>;
-	using Name = String;
+	using HashMapPtr = SharedPtr<HashMap<Symbol::Name, Symbol::Ptr>>;
 	
-	class Kind {
-	public:
-		Kind(const std::string& kind_str):kind_str(kind_str){}
-		static auto Var() -> Kind {
-			return Kind("Var");	
-		}
-		static auto Func() -> Kind {
-			return Kind("Func");	
-		}
-		auto operator==(const Kind& kind) -> bool {
-			return this->kind_str == kind.kind_str;
-		}
-
-	private:
-		std::string kind_str;
-	};
-
-	class Type {
-	public:
-		Type(const std::string& type_str) : type_str(type_str){}
-		static auto Int() -> Type {
-			return Type("Int");	
-		}
-		static auto Void() -> Type {
-			return Type("Void");	
-		}
-	private:
-		std::string type_str;
-	};
-
-	static auto Create(
-			const Name& name, const Kind& kind, const Type& type) -> Ptr {
-		return Ptr(new Symbol(name, kind, type));	
+	SymbolTable(unsigned int table_size) : 
+			table_size(table_size),
+			current_table_index(0), 
+			symbol_map_vect(){
+		CreateChildTable();
+	}
+	
+	auto CreateAndSwitchToChildTable() -> void {
+		CreateChildTable();
+		++current_table_index;
 	}
 
+	auto DestroyCurrentTableAndSwitchToParentTable() -> void {
+		symbol_map_vect.resize(current_table_index);	
+		--current_table_index;
+	}
 
+	auto Register(const Symbol::Ptr& symbol) -> void {
+		CurrentTable()->Insert(symbol->GetName(), symbol);
+	}
+
+	auto LookUp(const Symbol::Name& name)const -> Symbol::Ptr {
+		int temp_current_table_index = static_cast<int>(current_table_index);
+		while(temp_current_table_index >= 0)
+		{
+			auto element_ptr = symbol_map_vect.at(temp_current_table_index)->Find(name);
+			if(element_ptr){
+				return element_ptr->GetValue();
+			}
+			--temp_current_table_index;
+		}
+		return Symbol::Ptr();	
+	}
 private:
-	Symbol(const Name& name, const Kind& kind, const Type& type) 
-		: name(name), kind(kind), type(type){}
+	auto CurrentTable()const -> HashMapPtr {
+		return symbol_map_vect.at(current_table_index);	
+	}
+	auto CreateChildTable() -> void {
+		symbol_map_vect.push_back(HashMapPtr(new HashMap<Symbol::Name, Symbol::Ptr>(
+			table_size,
+			[](const Symbol::Name& name) -> unsigned int {
+				unsigned int sum = 0;
+				unsigned int count = 1;
+				for(unsigned int index = 0; index < name.Size(); ++index){
+					sum += name.At(index).ToUnsignedInt()*count;
+					count*=2;
+				}
+				return sum;
+			})));
+	}
 
-	Name name;
-	Kind kind;
-	Type type;
-	std::vector<unsigned char> byte_vect;
+	unsigned int table_size;
+	unsigned int current_table_index;
+	std::vector<HashMapPtr> symbol_map_vect;
 };
-/*
-class SymbolTable{
-public:
-    SymbolTable(){}
 
-private:
-	std::unordered_map<String, Symbol::Ptr> symbol_vect;
-
-};
-*/
 }
 

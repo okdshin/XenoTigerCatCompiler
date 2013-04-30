@@ -26,10 +26,16 @@ public:
 		return String(std_str);
 	}
 
-	auto At(unsigned int index) -> Char {
+	auto At(unsigned int index)const -> Char {
 		return char_vect.at(index);
 	}
 
+	/*
+	auto At(unsigned int index) -> Char& {
+		return char_vect.at(index);
+		//return *const_cast<Char*>(&At(index));
+	}
+	*/
 	auto Append(const Char& c) -> void {
 		char_vect.push_back(c);
 	} 
@@ -54,13 +60,29 @@ auto operator>>(std::istream& is, String& str) -> std::istream& {
 	str = String(std_str);
 	return is;
 }
+
 auto operator<<(std::ostream& os, const String& str) -> std::ostream& {
-	os << "String:";
+	//os << "String:";
 	for(const auto& c : str.char_vect){
 		os << c;
 	}
 	return os;
 }
-	
+
+auto operator==(const String& left, const String& right) -> bool {
+	if(left.Size() != right.Size()){
+		return false;	
+	}
+	for(unsigned int index = 0; index < left.Size(); ++index){
+		if(left.At(index) != right.At(index)){
+			return false;	
+		}
+	}
+	return true;
+}
+
+auto operator!=(const String& left, const String& right) -> bool {
+	return !(left == right);
+}
 }
 

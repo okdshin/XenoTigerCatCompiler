@@ -49,12 +49,19 @@ public:
 			!IsAssign() && !IsEol();
 	}
 
+	auto ToUnsignedInt()const -> unsigned int {
+		return static_cast<unsigned int>(raw_char);
+	}
+
 	friend auto operator>>(std::istream& is, Char& c) -> std::istream&;
 	friend auto operator<<(std::ostream& os, const Char& c) -> std::ostream&;
 
 private:
 	RawChar raw_char;
 };
+auto operator!=(const Char& left, const Char& right) -> bool {
+	return !(left == right);
+}
 auto operator>>(std::istream& is, Char& c) -> std::istream& {
 	is >> c.raw_char;
 	return is;	
